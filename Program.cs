@@ -12,7 +12,7 @@ builder.Configuration
 
 
 // Obtener la cadena de conexión a Redis desde la configuración
-var redisConnectionString = builder.Configuration.GetConnectionString("Redis");
+var redisConnectionString = builder.Configuration.GetSection("Redis")["ConnectionString"];
 
 // Configurar la conexión a Redis
 var redisConfiguration = ConfigurationOptions.Parse(redisConnectionString);
