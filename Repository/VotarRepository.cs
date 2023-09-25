@@ -9,6 +9,7 @@ namespace Programacion_NoSQL.Repository
 
         public VotarRepository(IMongoDatabase database)
         {
+            // referencia a la colección Votar
             _votarCollection = database.GetCollection<Votar>("Votar");
         }
 

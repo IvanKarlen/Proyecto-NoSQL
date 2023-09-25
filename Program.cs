@@ -1,5 +1,7 @@
 using MongoDB.Driver;
 using Programacion_NoSQL.Models;
+using Programacion_NoSQL.Repository;
+using Programacion_NoSQL.Services;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +11,6 @@ var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT
 builder.Configuration
     .AddJsonFile("appsettings.json", optional: true)
     .AddJsonFile($"appsettings.{environmentName}.json", optional: true);
-
 
 // Obtener la cadena de conexión a Redis desde la configuración
 var redisConnectionString = builder.Configuration.GetSection("Redis")["ConnectionString"];
@@ -40,6 +41,17 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton(redisConnection);
 builder.Services.AddSingleton(redisDatabase);
 builder.Services.AddSingleton(presidenteCollection);
+
+// Agregar los repositorios de /Repository
+builder.Services.AddScoped<PresidenteRepository>();
+builder.Services.AddScoped<VotarRepository>();
+builder.Services.AddScoped<VotanteRepository>();
+
+// Luego, registra los servicios de /Service
+builder.Services.AddScoped<PresidenteService>();
+builder.Services.AddScoped<VotarService>();
+
+builder.Services.AddSingleton<IMongoDatabase>(mongoDatabase);
 
 var app = builder.Build();
 
