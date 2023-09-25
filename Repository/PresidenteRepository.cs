@@ -41,12 +41,12 @@ namespace Programacion_NoSQL.Repository
         private IMongoCollection<Presidente> InitializoMongoCollection(IConfiguration configuration)
         {
             var mongoDatabase = ConexionMongo(configuration);
-            return mongoDatabase.GetCollection<Presidente>("Presidentes");
+            return mongoDatabase.GetCollection<Presidente>("Presidente");
         }
 
         private IMongoDatabase ConexionMongo(IConfiguration configuration)
         {
-            var mongoConnectionString = configuration.GetConnectionString("Mongo:ConnectionString");
+            var mongoConnectionString = configuration.GetSection("Mongo")["ConnectionString"];
             var databaseName = configuration.GetSection("Mongo").GetValue<string>("MongoDB");
 
             var mongoClient = new MongoClient(mongoConnectionString);
