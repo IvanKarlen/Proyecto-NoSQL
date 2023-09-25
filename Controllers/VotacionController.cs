@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Programacion_NoSQL.Models;
+using Programacion_NoSQL.Models.dto;
 using Programacion_NoSQL.Services;
 
 namespace Programacion_NoSQL.Controllers
@@ -24,9 +25,9 @@ namespace Programacion_NoSQL.Controllers
         }
 
         [HttpPost("votar")]
-        public RespuestaVoto registrarVoto(Votar voto)
+        public RespuestaDTO registrarVoto(VotarDTO votoDTO)
         {
-            return _votarService.cargar(voto);
+            return _votarService.cargar(votoDTO);
         }
     }
 }

@@ -13,7 +13,17 @@ namespace Programacion_NoSQL.Repository
         public PresidenteRepository(IDatabase redisDatabase, IConfiguration configuration)
         {
             _redisDatabase = redisDatabase;
-            _presidentesCollection = InitializoMongoCollection(configuration);
+            var mongoDatabase = ConexionMongo(configuration);
+            _presidentesCollection = mongoDatabase.GetCollection<Presidente>("Presidente");
+        }
+
+        private IMongoDatabase ConexionMongo(IConfiguration configuration)
+        {
+            var mongoConnectionString = configuration.GetSection("Mongo")["ConnectionString"];
+            var databaseName = configuration.GetSection("Mongo").GetValue<string>("MongoDB");
+
+            var mongoClient = new MongoClient(mongoConnectionString);
+            return mongoClient.GetDatabase(databaseName);
         }
 
         public List<Presidente> ObtenerTodos()
@@ -38,20 +48,13 @@ namespace Programacion_NoSQL.Repository
             return _presidentesCollection.Find(_ => true).ToList();
         }
 
-        private IMongoCollection<Presidente> InitializoMongoCollection(IConfiguration configuration)
+        public Presidente ObtenerPorId(int id)
         {
-            var mongoDatabase = ConexionMongo(configuration);
-            return mongoDatabase.GetCollection<Presidente>("Presidente");
-        }
+            // Crea un filtro para buscar el presidente por su ID
+            var filtro = Builders<Presidente>.Filter.Eq(p => p.Id, id);
 
-        private IMongoDatabase ConexionMongo(IConfiguration configuration)
-        {
-            var mongoConnectionString = configuration.GetSection("Mongo")["ConnectionString"];
-            var databaseName = configuration.GetSection("Mongo").GetValue<string>("MongoDB");
-
-            var mongoClient = new MongoClient(mongoConnectionString);
-            var mongoDatabase = mongoClient.GetDatabase(databaseName);
-            return mongoDatabase;
+            // Realiza la consulta en la colección de presidentes
+            return _presidentesCollection.Find(filtro).SingleOrDefault();
         }
     }
 }
