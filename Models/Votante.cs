@@ -17,5 +17,6 @@ namespace Programacion_NoSQL.Models
         public string Documento { get; set; }
         public string Cuil { get; set; }
         public PadronElectoral padronElectoral { get; set; }
+        public bool Voto { get; set; }
     }
 }

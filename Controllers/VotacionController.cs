@@ -19,15 +19,47 @@ namespace Programacion_NoSQL.Controllers
 
 
         [HttpGet("candidatos")]
-        public IEnumerable<Presidente> obtenerCandidatos()
+        [ProducesResponseType(typeof(IEnumerable<Presidente>), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 500)]
+        public IActionResult ObtenerTodosLosCandidatos()
         {
-            return _presidenteService.obtenerTodosLosCandidatos();
+            try
+            {
+                var presidentes = _presidenteService.ObtenerTodos();
+
+                if (presidentes != null && presidentes.Any())
+                {
+                    return Ok(presidentes);
+                }
+                else
+                {
+                    return NotFound("No se encontraron candidatos."); // Devuelve una respuesta 404 Not Found
+                }
+            }
+            catch (Exception ex)
+            {
+                // Devuelve una respuesta JSON con el mensaje de error
+                var errorResponse = new ErrorResponse { Message = "Error: " + ex.Message };
+                return StatusCode(500, errorResponse);
+            }
         }
 
         [HttpPost("votar")]
-        public RespuestaDTO registrarVoto(VotarDTO votoDTO)
+        [ProducesResponseType(typeof(RespuestaDTO), 200)]
+        [ProducesResponseType(typeof(ErrorResponse), 500)]
+
+        public IActionResult registrarVoto(VotarDTO votoDTO)
         {
-            return _votarService.cargar(votoDTO);
+            try
+            {
+                return Ok(_votarService.cargar(votoDTO));
+            }
+            catch (Exception ex)
+            {
+                // Devuelve una respuesta JSON con el mensaje de error
+                var errorResponse = new ErrorResponse { Message = "Error: " + ex.Message };
+                return StatusCode(500, errorResponse);
+            }
         }
     }
 }

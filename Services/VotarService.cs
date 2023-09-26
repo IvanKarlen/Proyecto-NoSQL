@@ -22,17 +22,24 @@ namespace Programacion_NoSQL.Services
         {
             Votante votanteBD = _votanteRepository.ObtenerPorCuil(votoDTO.votante.Cuil);
 
-            if (votanteBD != null)
+            if (votanteBD != null && votanteBD.Voto == true)
+            {
+                throw new Exception("Usted ya ha ejercido su voto.");
+            }
+            else if (votanteBD != null)
             {
                 Votante votante = new Votante
                 {
+                    Id = votanteBD.Id,
                     Nombre = votanteBD.Nombre,
                     Apellido = votanteBD.Apellido,
                     Cuil = votanteBD.Cuil,
                     IdTipoDocumento = votanteBD.IdTipoDocumento,
                     Documento = votanteBD.Documento,
+                    Voto = true,
                     padronElectoral = new PadronElectoral
                     {
+                        Id = votanteBD.padronElectoral.Id,
                         CIRC = votanteBD.padronElectoral.CIRC,
                         Distrito = votanteBD.padronElectoral.Distrito,
                         Mesa = votanteBD.padronElectoral.Mesa,
@@ -51,7 +58,16 @@ namespace Programacion_NoSQL.Services
                 });
 
                 if (votoBD != null)
-                    return new RespuestaDTO { votante = votante };
+                {
+                    //Actualizo estado del Votante
+                    votante.Voto = true;
+                    Votante votandeUpdate = _votanteRepository.Actualizar(votante);
+
+                    if (votandeUpdate != null)
+                        return new RespuestaDTO { votante = votante };
+                    else
+                        throw new Exception("No se ha guardado su voto. Intentelo nuevamente");
+                }
                 else
                     throw new Exception("No se ha guardado su voto. Intentelo nuevamente");
             }

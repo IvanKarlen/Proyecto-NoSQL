@@ -10,7 +10,7 @@ namespace Programacion_NoSQL.Services
             _presidenteRepository = presidenteRepository;
         }
 
-        public List<Presidente> obtenerTodosLosCandidatos()
+        public List<Presidente> ObtenerTodos()
         {
             return _presidenteRepository.ObtenerTodos();
         }
