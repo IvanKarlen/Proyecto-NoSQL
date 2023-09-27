@@ -21,11 +21,11 @@ namespace Programacion_NoSQL.Controllers
         [HttpGet("candidatos")]
         [ProducesResponseType(typeof(IEnumerable<Presidente>), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 500)]
-        public IActionResult ObtenerTodosLosCandidatos()
+        public async Task<IActionResult> ObtenerTodosLosCandidatos()
         {
             try
             {
-                var presidentes = _presidenteService.ObtenerTodos();
+                var presidentes = await _presidenteService.ObtenerTodos();
 
                 if (presidentes != null && presidentes.Any())
                 {
@@ -48,11 +48,12 @@ namespace Programacion_NoSQL.Controllers
         [ProducesResponseType(typeof(RespuestaDTO), 200)]
         [ProducesResponseType(typeof(ErrorResponse), 500)]
 
-        public IActionResult registrarVoto(VotarDTO votoDTO)
+        public async Task<IActionResult> registrarVoto(VotarDTO votoDTO)
         {
             try
             {
-                return Ok(_votarService.cargar(votoDTO));
+                var respuesta = await _votarService.Cargar(votoDTO);
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {

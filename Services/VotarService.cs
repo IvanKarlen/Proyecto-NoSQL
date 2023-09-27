@@ -18,63 +18,67 @@ namespace Programacion_NoSQL.Services
             _presidenteRepository = presidenteRepository;
         }
 
-        public RespuestaDTO cargar(VotarDTO votoDTO)
+        public async Task<RespuestaDTO> Cargar(VotarDTO votoDTO)
         {
-            Votante votanteBD = _votanteRepository.ObtenerPorCuil(votoDTO.votante.Cuil);
-
-            if (votanteBD != null && votanteBD.Voto == true)
+            try
             {
-                throw new Exception("Usted ya ha ejercido su voto.");
-            }
-            else if (votanteBD != null)
-            {
-                Votante votante = new Votante
-                {
-                    Id = votanteBD.Id,
-                    Nombre = votanteBD.Nombre,
-                    Apellido = votanteBD.Apellido,
-                    Cuil = votanteBD.Cuil,
-                    IdTipoDocumento = votanteBD.IdTipoDocumento,
-                    Documento = votanteBD.Documento,
-                    Voto = true,
-                    padronElectoral = new PadronElectoral
-                    {
-                        Id = votanteBD.padronElectoral.Id,
-                        CIRC = votanteBD.padronElectoral.CIRC,
-                        Distrito = votanteBD.padronElectoral.Distrito,
-                        Mesa = votanteBD.padronElectoral.Mesa,
-                        NroOrden = votanteBD.padronElectoral.NroOrden,
-                        Seccion = votanteBD.padronElectoral.Seccion,
-                    }
-                };
+                // Obtiene el votante de la base de datos
+                Votante votante = ObtenerPorCuil(votoDTO.votante.Cuil);
 
-                Presidente presidente = _presidenteRepository.ObtenerPorId(votoDTO.presidente.Id);
+                if (votante == null)
+                    throw new Exception("Error al cargar los datos. No hay un votante que coincida con esos datos.");
 
-                // Persisto el voto
+                // Obtengo el presidente por ID
+                Presidente presidente = await _presidenteRepository.ObtenerPorIdAsync(votoDTO.presidente.Id);
+
+                if (presidente == null)
+                    throw new Exception("Error al cargar los datos. No hay un presidente que coincida con esos datos.");
+
+                // Verifica si el votante ya ha ejercido su voto
+                VerificarVotanteEjercioVoto(votante);
+
+                // Persiste el voto
                 Votar votoBD = _votarRepository.Cargar(new Votar
                 {
                     presidente = presidente,
-                    votante = votante
+                    votante = votante,
                 });
 
-                if (votoBD != null)
-                {
-                    //Actualizo estado del Votante
-                    votante.Voto = true;
-                    Votante votandeUpdate = _votanteRepository.Actualizar(votante);
+                // Actualiza el estado del votante
+                Votante votanteActualizado = ActualizarEstadoVotante(votante);
 
-                    if (votandeUpdate != null)
-                        return new RespuestaDTO { votante = votante };
-                    else
-                        throw new Exception("No se ha guardado su voto. Intentelo nuevamente");
+                if (votoBD != null && votanteActualizado != null)
+                {
+                    return new RespuestaDTO { votante = votante };
                 }
                 else
-                    throw new Exception("No se ha guardado su voto. Intentelo nuevamente");
+                {
+                    throw new Exception("No se ha guardado su voto. Inténtelo nuevamente.");
+                }
             }
-            else
+            catch (Exception ex)
             {
-                throw new Exception("No existen personas asociadas a esos datos");
+                throw new Exception(ex.Message);
             }
+        }
+
+        private void VerificarVotanteEjercioVoto(Votante votante)
+        {
+            if (votante.Voto == true)
+            {
+                throw new Exception("Usted ya ha ejercido su voto.");
+            }
+        }
+
+        private Votante ActualizarEstadoVotante(Votante votante)
+        {
+            votante.Voto = true;
+            return _votanteRepository.Actualizar(votante);
+        }
+
+        private Votante ObtenerPorCuil(string Cuil)
+        {
+            return _votanteRepository.ObtenerPorCuil(Cuil);
         }
     }
 }
