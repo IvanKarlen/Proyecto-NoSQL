@@ -1,22 +1,23 @@
 # Proyecto-NoSQL
+Aplicación en ejecución de un sitio web desarrollado con ASP.NET consumiendo 2 bases de datos NoSql distintas. Se deberá ejemplificar como conectarse a una base de datos a través del driver para cada base de datos. 
 
 # Configuración del Entorno de Desarrollo
 
-Este proyecto utiliza MongoDB y Redis como parte de su infraestructura. A continuación, se detallan los pasos para configurar y cargar datos en MongoDB Compass y Redis en tu máquina local.
+Este proyecto utiliza MongoDB y Redis como parte de su infraestructura. A continuaciÃ³n, se detallan los pasos para configurar y cargar datos en MongoDB Compass y Redis en tu mÃ¡quina local.
 
 ## MongoDB Compass
 
-MongoDB Compass es una herramienta gráfica para interactuar con MongoDB. Sigue estos pasos para descargarlo e instalarlo en tu máquina:
+MongoDB Compass es una herramienta grÃ¡fica para interactuar con MongoDB. Sigue estos pasos para descargarlo e instalarlo en tu mÃ¡quina:
 
-1. Ve al sitio web de MongoDB y descarga MongoDB Compass desde [aquí](https://www.mongodb.com/try/download/compass).
+1. Ve al sitio web de MongoDB y descarga MongoDB Compass desde [aquÃ­](https://www.mongodb.com/try/download/compass).
 
-2. Ejecuta el archivo de instalación descargado y sigue las instrucciones para instalar MongoDB Compass en tu máquina.
+2. Ejecuta el archivo de instalaciÃ³n descargado y sigue las instrucciones para instalar MongoDB Compass en tu mÃ¡quina.
 
-3. Una vez instalado, abre MongoDB Compass y sigue los pasos para conectarte a tu instancia local de MongoDB o a una instancia remota, según corresponda.
+3. Una vez instalado, abre MongoDB Compass y sigue los pasos para conectarte a tu instancia local de MongoDB o a una instancia remota, segÃºn corresponda.
 
 ## Carga de Datos en MongoDB Compass
 
-A continuación, se describe cómo cargar los datos de votantes, presidentes y diputados en MongoDB Compass. Utilizaremos las clases `Votante`, `Presidente`, y `Diputado` del proyecto como referencia para la estructura de datos.
+A continuaciÃ³n, se describe cÃ³mo cargar los datos de votantes, presidentes y diputados en MongoDB Compass. Utilizaremos las clases `Votante`, `Presidente`, y `Diputado` del proyecto como referencia para la estructura de datos.
 
 ### Votantes
 
@@ -59,7 +60,7 @@ Los presidentes son candidatos a la presidencia y pueden tener una lista de dipu
             "Id": 2,
             "Nombre": "Nombre del Diputado 2"
         }
-        // Agrega más diputados si es necesario
+        // Agrega mÃ¡s diputados si es necesario
     ]
 }
 ```

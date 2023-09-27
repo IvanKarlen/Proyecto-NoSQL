@@ -10,9 +10,9 @@ namespace Programacion_NoSQL.Services
             _presidenteRepository = presidenteRepository;
         }
 
-        public List<Presidente> obtenerTodosLosCandidatos()
+        public async Task<List<Presidente>> ObtenerTodos()
         {
-            return _presidenteRepository.ObtenerTodos();
+            return await _presidenteRepository.ObtenerTodosAsync();
         }
     }
 }
