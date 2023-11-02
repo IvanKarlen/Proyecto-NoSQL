@@ -13,6 +13,6 @@ namespace Programacion_NoSQL.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string VicePresidente { get; set; }
-        public List<Diputado> Diputados { get; set; }
+        public List<JefeDeGobierno> JefeDeGobierno { get; set; }
     }
 }

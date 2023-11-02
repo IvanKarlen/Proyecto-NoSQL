@@ -4,7 +4,7 @@
     {
         public VotanteDTO votante { get; set; }
         public PresidenteDTO presidente { get; set; }
-        public DiputadoDTO diputado { get; set; }
+        public JefeDeGobiernoDTO jefeDeGobierno { get; set; }
     }
 
     public class VotanteDTO
@@ -17,7 +17,7 @@
         public int Id { get; set; }
     }
 
-    public class DiputadoDTO
+    public class JefeDeGobiernoDTO
     {
         public int Id { get; set; }
     }

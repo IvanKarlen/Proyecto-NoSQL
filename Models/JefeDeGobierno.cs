@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Programacion_NoSQL.Models
 {
-    public class Diputado
+    public class JefeDeGobierno
     {
         [BsonId]
         [BsonElement("_id")]
