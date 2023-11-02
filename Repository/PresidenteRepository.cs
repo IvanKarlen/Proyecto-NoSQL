@@ -19,23 +19,39 @@ namespace Programacion_NoSQL.Repository
 
         public async Task<List<Presidente>> ObtenerTodosAsync()
         {
-            var data = await _redisDatabase.StringGetAsync("lista_de_presidentes");
-            if (data.HasValue)
+            var cachedData = await _redisDatabase.StringGetAsync("lista_de_presidentes");
+            var expirationDate = await _redisDatabase.StringGetAsync("lista_de_presidentes_expiracion");
+
+            if (cachedData.HasValue && expirationDate.HasValue)
             {
-                var jsonData = data.ToString();
-                return JsonSerializer.Deserialize<List<Presidente>>(jsonData);
+                var jsonData = cachedData.ToString();
+                var expirationDateTime = DateTime.Parse(expirationDate.ToString());
+
+                // Verificar si la fecha de expiración ha pasado
+                if (DateTime.UtcNow < expirationDateTime)
+                {
+                    return JsonSerializer.Deserialize<List<Presidente>>(jsonData);
+                }
             }
-            else
+
+            // Si no hay datos en caché o la caché ha expirado
+            var presidenteData = await ObtenerDatosDeBdAsync();
+
+            // Se verifica si los datos han cambiado antes de actualizar la caché
+            var newJsonData = JsonSerializer.Serialize(presidenteData);
+            if (!newJsonData.Equals(cachedData))
             {
-                // Obtiene los datos de Mongo
-                var presidenteData = await ObtenerDatosDeBdAsync();
-                var jsonData = JsonSerializer.Serialize(presidenteData);
-                
-                // Guarda los valores en Redis
-                await _redisDatabase.StringSetAsync("lista_de_presidentes", jsonData, VIGENCIA_CACHE_REDIS);
-                return presidenteData;
+                // Establecer la nueva fecha de vencimiento (1 día a partir de ahora)
+                var newExpirationDateTime = DateTime.UtcNow.Add(VIGENCIA_CACHE_REDIS);
+
+                // Guardar los datos y la nueva fecha de expiración en Redis
+                await _redisDatabase.StringSetAsync("lista_de_presidentes", newJsonData);
+                await _redisDatabase.StringSetAsync("lista_de_presidentes_expiracion", newExpirationDateTime.ToString());
             }
+
+            return presidenteData;
         }
+
 
         private async Task<List<Presidente>> ObtenerDatosDeBdAsync()
         {
