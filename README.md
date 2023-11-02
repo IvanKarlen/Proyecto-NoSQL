@@ -3,7 +3,7 @@
 Aplicación en ejecución de un sitio web desarrollado con ASP.NET CORE consumiendo 2 bases de datos NoSql distintas. Se deberá ejemplificar como conectarse a una base de datos a través del driver para cada base de datos. 
 
 
-# Programación-NoSQL
+# Proyecto Elecciones Presidenciales 2023
 
 Este proyecto muestra una aplicación web desarrollada con ASP.NET que utiliza dos bases de datos NoSQL distintas: MongoDB y Redis. A continuación, se detallan los pasos para instalar MongoDB Compass y Redis en tu entorno local, junto con las configuraciones y la carga de datos en MongoDB Compass.
 
